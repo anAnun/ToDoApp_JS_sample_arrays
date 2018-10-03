@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            display: block;
+            background-color: rgba(169, 190, 175, 0.445);
+            width: 500px;
+            margin: 12px auto 12px auto;
+        }
+
+        .btnDelete {
+            border-radius: 8px;
+            background-color: red;
+            color: white;
+        }
+
+        .btnSubmit {
+            background-color: rgba(0, 0, 255, 0.555);
+            ;
+            border-radius: 8px;
+            color: white;
+            padding: 12px;
+        }
+
+        .comfirmDelete {
+            background-color: rgba(0, 0, 0, 0.472);
+        }
+
+        div.selectStyling {
+            position: absolute;
+            border-radius: 8px;
+        }
+
+        .selectStyling {
+            padding: 4px;
+            font: Serif;
+            line-height: 1.2;
+            background: white;
+            color: rgb(57, 29, 180);
+        }
+
+        .selectStyling:after {
+            padding: 7px;
+            background: blue;
+            color: white;
+        }
+
+        input {
+            border-radius: 8px;
+        }
+
+        .text {
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .title {
+            font-weight: bold;
+            font-style: Serif;
+            font-size: 48px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="title">
+        To do List
+    </h1>
+    <form>
+        <label for="inputField" class="text">
+            New task:
+        </label>
+        <input type="text" id="inputField" class="inputField" />
+        <button type="button" id="submitButton" class="btnSubmit">
+            Submit
+        </button>
+        <br />
+        <div class="selectStyling">
+            <select id="dropdown" onChange="showTasks()" class="selectStyling">
+                <option value="selectTasks">Incomplete tasks</option>
+                <option value="selectCompleted">Completed tasks</option>
+            </select>
+        </div>
+        <br />
+        <br />
+    </form>
+    <ul class="taskList" id="taskList"></ul>
+</body>
+<script>
+
+    //add into taskContents array everytime submit is clicked
+    //loop through the array and display that on the dom\
+    //have that happen everytime the button is checked
+
+    //when check box is pressed delete item from main array
+    //and move into new completed array
+
+    //have a button that displays the completed arrays 
+    //instead of current arrays
+
+    var checkedContents = [];
+    var dropdown = document.getElementById("dropdown");
+    var elementSel = document.getElementById("taskList");
+    var elementSelCompleted = document.getElementById("completedList");
+    var inputField = document.getElementById("inputField");
+    var taskContents = [];
+
+
+    var submit = document.getElementById("submitButton");
+    submit.addEventListener("click", addTask);
+
+    function showTasks() {
+        if (dropdown.value == "selectTasks") {
+            elementSel.innerHTML = (taskContents.join(""));
+            //console.log(taskContents);
+        }
+        if (dropdown.value == "selectCompleted") {
+            elementSel.innerHTML = (checkedContents.join(""));
+            //console.log(checkedContents);
+        }
+    }
+
+    // var checkbox = document.querySelectorAll("checkbox").addEventListener("change", onChangeFunction);
+    // function onChangeFunction() {
+    //     alert('boogabooga');
+    // }
+
+    function onCheckClick(checkBoxId) {
+        var val = checkBoxId.id;
+        var data = "";
+        data += "<li><del>" + val + "</del>";
+        data += "<input checked type='checkbox' onChange='onCheckClicked(" + val + ")' name='checkbox' id='" + val + "'>";
+        data += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        data += "</li><br />";
+
+        checkedContents.push(data);
+        //this function builds the array with the checkbox clicked, and calls 'onCheckClicked' 
+        //which moves it to the checkedContents array
+        //it also removes the original index of this string from the array
+
+        var dataToDelete = "";
+        dataToDelete += "<li>" + val;
+        dataToDelete += "<input type='checkbox' onChange='onCheckClick(" + val + ")' name='checkbox' id='" + val + "'>";
+        dataToDelete += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        dataToDelete += "</li><br />";
+
+        for (var i = 0; i < taskContents.length; i++) {
+            if (taskContents[i] == dataToDelete) {
+                taskContents.splice(i, 1);
+                elementSel.innerHTML = (taskContents.join(""));
+            };
+        };
+    }
+
+    function onCheckClicked(checkBoxId) {
+        var val = checkBoxId.id;
+        var data = "";
+        data += "<li>" + val;
+        data += "<input type='checkbox' onChange='onCheckClick(" + val + ")' name='checkbox' id='" + val + "'>";
+        data += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        data += "</li><br />";
+
+        taskContents.push(data);
+
+        var dataToDelete = "";
+        dataToDelete += "<li><del>" + val + "</del>";
+        dataToDelete += "<input checked type='checkbox' onChange='onCheckClicked(" + val + ")' name='checkbox' id='" + val + "'>";
+        dataToDelete += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        dataToDelete += "</li><br />";
+
+        for (var i = 0; i < checkedContents.length; i++) {
+            if (checkedContents[i] == dataToDelete) {
+                checkedContents.splice(i, 1);
+                elementSel.innerHTML = (checkedContents.join(""));
+            };
+        };
+    }
+
+    function deleteFromArray(s) {
+        var val = s.id;
+
+        var data = "";
+        data += "<li>" + val;
+        data += "<input type='checkbox' onChange='onCheckClick(" + val + ")' name='checkbox' id='" + val + "'>";
+        data += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        data += "</li><br />";
+
+        var dataChecked = "";
+        dataChecked += "<li><del>" + val + "</del>";
+        dataChecked += "<input checked type='checkbox' onChange='onCheckClicked(" + val + ")' name='checkbox' id='" + val + "'>";
+        dataChecked += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        dataChecked += "</li><br />";
+
+        var x = confirm("Are you sure you want to delete this task?");
+        if (x == true) {
+            for (var i = 0; i < taskContents.length; i++) {
+                if (taskContents[i] == data) {
+                    taskContents.splice(i, 1);
+                    elementSel.innerHTML = taskContents.join("");
+                };
+            };
+            for (var w = 0; w < checkedContents.length; w++) {
+                if (checkedContents[w] == dataChecked) {
+                    checkedContents.splice(w, 1);
+                    elementSel.innerHTML = checkedContents.join("");
+                };
+            };
+        }
+    }
+
+
+    function addTask() {
+
+        // var blag = ""
+        // blag += "<li>";
+        // blag += "<input type=ksdlfjlsdfj />
+        // blag += "
+
+        var val = inputField.value;
+        var data = "";
+        data += "<li>" + val;
+        data += "<input type='checkbox' onChange='onCheckClick(" + val + ")' name='checkbox' id='" + val + "'>";
+        data += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        data += "</li><br />";
+
+        var dataChecked = "";
+        dataChecked += "<li><del>" + val + "</del>";
+        dataChecked += "<input checked type='checkbox' onChange='onCheckClicked(" + val + ")' name='checkbox' id='" + val + "'>";
+        dataChecked += "<button type='button' class='btnDelete' onClick='deleteFromArray(" + val + ")'>Delete</button>";
+        dataChecked += "</li><br />";
+
+        // function onCheckClick(checkBoxId) {
+        //     console.log(checkBoxId);
+        //     for (var i = 0; i < taskContents.length; i++) {
+        //         if (taskContents[i] == data) {
+        //             taskContents.splice(i, 1);
+        //         }
+        //     }
+
+        //     //delete from old array
+
+        //     //push into new array
+
+        // }
+        if (taskContents.indexOf(data) > -1 || checkedContents.indexOf(dataChecked) > -1) {
+            alert("task exists!");
+        }
+        else if (parseInt(val, 10)) {
+            alert("Can not be a number!");
+        }
+        else {
+            taskContents.push(data);
+            elementSel.innerHTML = (taskContents.join(""));
+        };
+        console.log(data);
+    }
+</script>
+
+</html>
